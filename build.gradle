@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+group = 'org'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.testng:testng:7.9.0'
+    implementation 'io.appium:java-client:9.1.0'
+    testImplementation 'ch.qos.logback:logback-classic:1.5.1'
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    implementation 'io.qameta.allure:allure-testng:2.25.0'
+}
+
+test {
+    useTestNG()
+}
+
+allure {
+    version = '2.25.0'
+}
