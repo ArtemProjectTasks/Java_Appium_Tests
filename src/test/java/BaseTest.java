@@ -1,12 +1,13 @@
 import Logger.LoggerUtil;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterGroups;
+import org.testng.annotations.BeforeGroups;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,28 +19,46 @@ public class BaseTest {
         LoggerUtil.logInfo("Test is starting");
     }
 
-    @BeforeTest
-    public void  beforeSetUp() throws MalformedURLException, KeyAlreadyExistsException {
-        LoggerUtil.logInfo("Configure capabilities");
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        getCapabilities().forEach((k, v) -> desiredCapabilities.setCapability(k, v));
+    @BeforeGroups(groups = "Mastodon")
+    public void  setUpMastodon() throws MalformedURLException {
+        Map<String, String> hashSet = new HashMap<>();
+        hashSet.put("app",
+                "C:\\Users\\a.moskvin\\Documents\\NetBeansProjects\\AppiumProject\\Mastodon_2.4.0_apkcombo.com.apk");
 
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), desiredCapabilities);
+        ConfigureDriver(hashSet);
     }
 
-    @AfterTest
+    @BeforeGroups(groups = "Messages")
+    public void  setUpMessages() throws MalformedURLException {
+        Map<String, String> hashSet = new HashMap<>();
+        hashSet.put("appPackage", "com.google.android.apps.messaging");
+        hashSet.put("appActivity", "com.google.android.apps.messaging.ui.conversationlist.ConversationListActivity");
+        hashSet.put("noReset", "true");
+
+        ConfigureDriver(hashSet);
+    }
+
+    @AfterGroups(groups = { "Messages", "Mastodon" } )
     public void beforeTearDown(){
         driver.quit();
     }
 
-    private static Map<String, String> getCapabilities() {
+    private void ConfigureDriver(Map<String, String> set) throws MalformedURLException {
+        LoggerUtil.logInfo("Configure default capabilities for tests");
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        getDefaultCapabilities().forEach((k, v) -> desiredCapabilities.setCapability(k, v));
+        set.forEach((k, v) -> desiredCapabilities.setCapability(k, v));
+
+        driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), desiredCapabilities);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    private static Map<String, String> getDefaultCapabilities() throws KeyAlreadyExistsException {
         Map<String, String> dictOfCapabilities = new HashMap<>();
         dictOfCapabilities.put("platformName", "Android");
-        dictOfCapabilities.put("platformVersion", "13.0");
+        dictOfCapabilities.put("platformVersion", "12.0");
         dictOfCapabilities.put("udid", "emulator-5554");
-        dictOfCapabilities.put("automationName", "UiAutomator2"); // Replace with the emulator's Android version
-        dictOfCapabilities.put("appPackage", "com.google.android.apps.maps");
-        dictOfCapabilities.put("appActivity", "com.google.android.maps.MapsActivity");
+        dictOfCapabilities.put("automationName", "UiAutomator2");
 
         return dictOfCapabilities;
     }

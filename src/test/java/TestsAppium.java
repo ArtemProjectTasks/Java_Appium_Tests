@@ -1,80 +1,103 @@
 import Logger.LoggerUtil;
-import com.github.javafaker.Faker;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.offset.PointOption;
+import jdk.jfr.Description;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import java.text.MessageFormat;
 import java.time.Duration;
+import java.util.HashMap;
 
+import static io.appium.java_client.touch.WaitOptions.waitOptions;
+import static java.time.Duration.ofMillis;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings("ALL")
 public class TestsAppium extends BaseTest {
     public TestsAppium(){
         super();
-        LoggerUtil.logInfo("Run google maps tests");
+        LoggerUtil.logInfo("Run tests");
     }
 
-    @Test
-    public void openMapsAndFindCity(){
+    @Test(groups = "Mastodon")
+    @Description("Mastodon app swipe test")
+    public void openAppAndOpenLearnMoreThenClose() {
         //Arrange
-        var address = new Faker().address();
-        var cityName = address.city();
-        var streetName = address.streetName();
-
-        LoggerUtil.logInfo(MessageFormat.format("Open maps and find city {0}", cityName));
+        LoggerUtil.logInfo("Open mastodon and open learn more");
+        var learnMore = findElementAssertDisplayed(By.xpath(
+                "//android.widget.Button[@resource-id=\"org.joinmastodon.android:id/btn_learn_more\"]"),
+                "Learn more view");
+        learnMore.click();
 
         //Act
-        var searchBox = driver.findElement(
-                By.xpath("//android.widget.TextView[contains(@text, 'Search here')]"));
-        searchBox.sendKeys(cityName);
-        searchBox.submit();
+        LoggerUtil.logInfo("Find opened learn more panel and assert it displayed");
+        var learnMorePanelLocator = By.xpath("//android.widget.TextView[@text=\"Welcome to Mastodon\"]//parent::android.widget.LinearLayout");
+        var learnMorePanel = findElementAssertDisplayed(learnMorePanelLocator, "Learn more panel");
 
-        int waitTime = 8;
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitTime));
-        WebElement descriptionElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//android.widget.RelativeLayout[@resource-id='com.google.android.apps.maps:id/place_page_view']/android.widget.FrameLayout")
-        ));
+        LoggerUtil.logInfo("Hide the panel using swipe");
+        HashMap<String, Object> swipeArgs = new HashMap<>();
+        swipeArgs.put("direction", "down");
+        swipeArgs.put("element", ((RemoteWebElement)learnMorePanel).getId());
+        swipeArgs.put("percent", 0.5);
+
+        driver.executeScript("mobile: swipeGesture", swipeArgs);
 
         //Assert
-        assertTrue(descriptionElement.isDisplayed());
-        assertTrue(descriptionElement.getText().contains(cityName));
+        LoggerUtil.logInfo("Wait for panel to became hidden");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
+        assertTrue(wait.until((driver) ->
+        {
+            return driver.findElements(learnMorePanelLocator).isEmpty();
+        }));
     }
 
-    @Test
+    @Test(groups = "Messages")
+    @Description("Messages app test")
     public void openMapsAndSwipeToTheRight(){
-        LoggerUtil.logInfo("Open maps, zoom and swipe out of the area");
+        LoggerUtil.logInfo("Open messages app");
 
-        //Arrange
-        Dimension screenSize = driver.manage().window().getSize();
-        int screenWidth = screenSize.getWidth();
-        int screenHeight = screenSize.getHeight();
-        int centerX = screenWidth / 2;
-        int centerY = screenHeight / 2;
+        findElementAssertDisplayed(By.xpath(
+                "//android.widget.ImageView[@content-desc=\"More options\"]"),
+                "More options")
+                .click();
 
-        //Act
-        TouchAction touchAction = new TouchAction(driver);
-        touchAction.tap(PointOption.point(centerX, centerY));
+        findElementAssertDisplayed(By.xpath(
+                "//*[contains(@text, 'Settings')]//ancestor::android.widget.LinearLayout[@resource-id=\"com.google.android.apps.messaging:id/content\"]"),
+                "Settings button")
+                .click();
 
-        var element = driver.findElement(
-                By.xpath("//android.widget.Button[@resource-id=\"org.joinmastodon.android:id/btn_join_default_server\"]"));
-        element.click();
+        findElementAssertDisplayed(By.xpath(
+                "//android.support.v7.widget.RecyclerView[@resource-id=\"com.google.android.apps.messaging:id/recycler_view\"]"),
+                "Settings view");
 
-        var locator = By.xpath("//android.widget.TextView[@resource-id=\"org" +
-                ".joinmastodon.android:id/text\" and @text=\"By continuing," +
-                " you agree to follow by the following rules set and enforced " +
-                "by the mastodon.social moderators.\"]");
+        findElementAssertDisplayed(By.xpath(
+                "//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"About, terms & privacy\"]"),
+                "Terms and services button")
+                .click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(4));
-        WebElement elementWait = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        assertTrue(elementWait.isDisplayed(), "Element is not visible");
+        var termsAndServices = findElementAssertDisplayed(By.xpath(
+                "//android.widget.FrameLayout[@resource-id=\"android:id/list_container\"]"),
+                "Terms and services view");
 
-        //Assert
+        LoggerUtil.logInfo("Find element version nama and asset visibility");
+        var termsAndServicesVersionInfo = termsAndServices.findElement(By.xpath(
+                "/android.widget.LinearLayout[1]/android.widget.RelativeLayout"));
+        assertTrue(termsAndServicesVersionInfo.isDisplayed());
+    }
+
+    private WebElement findElementAssertDisplayed(By locator, String elementName){
+        LoggerUtil.logInfo(MessageFormat.format("Find element: {0} and assert visibility", elementName));
+        var element = driver.findElement(locator);
+        assertTrue(element.isDisplayed());
+
+        return element;
     }
 }
