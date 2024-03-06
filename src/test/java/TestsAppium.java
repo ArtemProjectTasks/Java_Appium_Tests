@@ -1,13 +1,8 @@
 import Logger.LoggerUtil;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.offset.PointOption;
 import jdk.jfr.Description;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
@@ -15,8 +10,6 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.HashMap;
 
-import static io.appium.java_client.touch.WaitOptions.waitOptions;
-import static java.time.Duration.ofMillis;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -61,7 +54,7 @@ public class TestsAppium extends BaseTest {
 
     @Test(groups = "Messages")
     @Description("Messages app test")
-    public void openMapsAndSwipeToTheRight(){
+    public void openMessagesAndCheckTermsAndConditions(){
         LoggerUtil.logInfo("Open messages app");
 
         findElementAssertDisplayed(By.xpath(
@@ -89,7 +82,7 @@ public class TestsAppium extends BaseTest {
 
         LoggerUtil.logInfo("Find element version nama and asset visibility");
         var termsAndServicesVersionInfo = termsAndServices.findElement(By.xpath(
-                "/android.widget.LinearLayout[1]/android.widget.RelativeLayout"));
+                "//android.widget.LinearLayout[1]/android.widget.RelativeLayout"));
         assertTrue(termsAndServicesVersionInfo.isDisplayed());
     }
 

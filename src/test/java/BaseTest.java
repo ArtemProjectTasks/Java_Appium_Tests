@@ -1,4 +1,5 @@
 import Logger.LoggerUtil;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterGroups;
@@ -30,9 +31,9 @@ public class BaseTest {
 
     @BeforeGroups(groups = "Messages")
     public void  setUpMessages() throws MalformedURLException {
-        Map<String, String> hashSet = new HashMap<>();
+        Map<String, String> hashSet = new HashMap<>(); // Adjust if necessary
         hashSet.put("appPackage", "com.google.android.apps.messaging");
-        hashSet.put("appActivity", "com.google.android.apps.messaging.ui.conversationlist.ConversationListActivity");
+        hashSet.put("appActivity", ".ui.ConversationListActivity");
         hashSet.put("noReset", "true");
 
         ConfigureDriver(hashSet);
@@ -40,6 +41,7 @@ public class BaseTest {
 
     @AfterGroups(groups = { "Messages", "Mastodon" } )
     public void beforeTearDown(){
+        driver.terminateApp("com.google.android.apps.messaging");
         driver.quit();
     }
 
