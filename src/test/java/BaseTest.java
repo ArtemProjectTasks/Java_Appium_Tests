@@ -59,7 +59,7 @@ public class BaseTest {
     }
 
     private void ConfigureDriver(Map<String, String> set) throws MalformedURLException {
-        LoggerUtil.logInfo("Configure default capabilities for tests");
+        LoggerUtil.logInfo("Add all capabilities");
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         getDefaultCapabilities().forEach((k, v) -> desiredCapabilities.setCapability(k, v));
         set.forEach((k, v) -> desiredCapabilities.setCapability(k, v));
@@ -69,6 +69,7 @@ public class BaseTest {
     }
 
     private static Map<String, String> getDefaultCapabilities() throws KeyAlreadyExistsException {
+        LoggerUtil.logInfo("Configure default capabilities for tests");
         Map<String, String> dictOfCapabilities = new HashMap<>();
         dictOfCapabilities.put("platformName", "Android");
         dictOfCapabilities.put("platformVersion", "12.0");

@@ -16,12 +16,8 @@ import java.util.Random;
 
 import static org.testng.Assert.assertTrue;
 
-@SuppressWarnings("ALL")
 public class TestsAppium extends BaseTest {
-    public TestsAppium(){
-        super();
-        LoggerUtil.logInfo("Run tests");
-    }
+    public TestsAppium(){ super(); LoggerUtil.logInfo("Run tests"); }
 
     @Test(groups = "Mastodon")
     @Description("Mastodon app swipe test")
