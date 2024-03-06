@@ -1,6 +1,4 @@
 import Logger.LoggerUtil;
-import com.google.common.collect.ImmutableMap;
-import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterGroups;
@@ -9,6 +7,8 @@ import org.testng.annotations.BeforeGroups;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +24,11 @@ public class BaseTest {
     @BeforeGroups(groups = "Mastodon")
     public void  setUpMastodon() throws MalformedURLException {
         Map<String, String> hashSet = new HashMap<>();
-        hashSet.put("app",
-                "C:\\Users\\a.moskvin\\Documents\\NetBeansProjects\\AppiumProject\\Mastodon_2.4.0_apkcombo.com.apk");
+
+        String currentDir = System.getProperty("user.dir");
+        Path apkPath = Paths.get(currentDir, "..", "AppiumProject", "Mastodon_2.4.0_apkcombo.com.apk");
+
+        hashSet.put("app", apkPath.toString());
 
         ConfigureDriver(hashSet);
     }
