@@ -1,4 +1,5 @@
 import Logger.LoggerUtil;
+import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -31,7 +32,7 @@ public class BaseTest {
 
     @BeforeGroups(groups = "Messages")
     public void  setUpMessages() throws MalformedURLException {
-        Map<String, String> hashSet = new HashMap<>(); // Adjust if necessary
+        Map<String, String> hashSet = new HashMap<>();
         hashSet.put("appPackage", "com.google.android.apps.messaging");
         hashSet.put("appActivity", ".ui.ConversationListActivity");
         hashSet.put("noReset", "true");
@@ -39,9 +40,18 @@ public class BaseTest {
         ConfigureDriver(hashSet);
     }
 
-    @AfterGroups(groups = { "Messages", "Mastodon" } )
+    @BeforeGroups(groups = "Clock")
+    public void  setUpClock() throws MalformedURLException {
+        Map<String, String> hashSet = new HashMap<>();
+          hashSet.put("appPackage", "com.google.android.deskclock");
+          hashSet.put("appActivity", "com.android.deskclock.DeskClock");
+          hashSet.put("noReset", "true");
+
+        ConfigureDriver(hashSet);
+    }
+
+    @AfterGroups(groups = { "Messages", "Mastodon", "Clock" } )
     public void beforeTearDown(){
-        driver.terminateApp("com.google.android.apps.messaging");
         driver.quit();
     }
 
