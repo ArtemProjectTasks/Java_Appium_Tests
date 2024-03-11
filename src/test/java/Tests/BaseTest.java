@@ -1,8 +1,9 @@
+package Tests;
+
 import Logger.LoggerUtil;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.annotations.AfterGroups;
-import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.AfterTest;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.net.MalformedURLException;
@@ -17,43 +18,33 @@ import java.util.Map;
 public class BaseTest {
     protected AndroidDriver driver;
 
-    public BaseTest() {
+    public BaseTest() throws MalformedURLException {
         LoggerUtil.logInfo("Test is starting");
-    }
 
-    @BeforeGroups(groups = "Mastodon")
-    public void  setUpMastodon() throws MalformedURLException {
+        String className = getClass().getName();
+        System.out.println("Current class: " + className);
         Map<String, String> hashSet = new HashMap<>();
 
-        String currentDir = System.getProperty("user.dir");
-        Path apkPath = Paths.get(currentDir, "..", "AppiumProject", "Mastodon_2.4.0_apkcombo.com.apk");
-
-        hashSet.put("app", apkPath.toString());
+        if (className.contains("MastodonTest")) {
+            String currentDir = System.getProperty("user.dir");
+            Path apkPath = Paths.get(currentDir, "..", "AppiumProject", "Mastodon_2.4.0_apkcombo.com.apk");
+            hashSet.put("app", apkPath.toString());
+        }
+        else if (className.contains("MessagesTests")) {
+            hashSet.put("appPackage", "com.google.android.apps.messaging");
+            hashSet.put("appActivity", ".ui.ConversationListActivity");
+            hashSet.put("noReset", "true");
+        }
+        else if (className.contains("ClockTests")) {
+            hashSet.put("appPackage", "com.google.android.deskclock");
+            hashSet.put("appActivity", "com.android.deskclock.DeskClock");
+            hashSet.put("noReset", "true");
+        }
 
         ConfigureDriver(hashSet);
     }
 
-    @BeforeGroups(groups = "Messages")
-    public void  setUpMessages() throws MalformedURLException {
-        Map<String, String> hashSet = new HashMap<>();
-        hashSet.put("appPackage", "com.google.android.apps.messaging");
-        hashSet.put("appActivity", ".ui.ConversationListActivity");
-        hashSet.put("noReset", "true");
-
-        ConfigureDriver(hashSet);
-    }
-
-    @BeforeGroups(groups = "Clock")
-    public void  setUpClock() throws MalformedURLException {
-        Map<String, String> hashSet = new HashMap<>();
-          hashSet.put("appPackage", "com.google.android.deskclock");
-          hashSet.put("appActivity", "com.android.deskclock.DeskClock");
-          hashSet.put("noReset", "true");
-
-        ConfigureDriver(hashSet);
-    }
-
-    @AfterGroups(groups = { "Messages", "Mastodon", "Clock" } )
+    @AfterTest
     public void beforeTearDown(){
         driver.quit();
     }
