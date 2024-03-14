@@ -5,6 +5,7 @@ import Pages.Messages.MessagesPage;
 import Pages.Messages.SettingsPage;
 import Pages.Messages.TermsAndConditionsPage;
 import io.appium.java_client.android.AndroidDriver;
+import io.qameta.allure.Step;
 import lombok.Getter;
 
 import static org.testng.AssertJUnit.assertTrue;
@@ -21,6 +22,7 @@ public class MessagesSteps extends BaseSteps {
         super(driver);
     }
 
+    @Step
     public void navigateToSettings(){
         LoggerUtil.logInfo("Navigate to the settings");
         LoggerUtil.logInfo("Open more options menu dropdown");
@@ -30,6 +32,7 @@ public class MessagesSteps extends BaseSteps {
         getMessagesPage().clickSettingsInMoreMenuOptions();
     }
 
+    @Step
     public void navigateToTermsAndConditions(){
         LoggerUtil.logInfo("Click terms and conditions");
         getSettingsPage().clickTermsAndConditions();

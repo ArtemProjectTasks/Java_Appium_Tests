@@ -3,6 +3,7 @@ package Pages.Clock;
 import Logger.LoggerUtil;
 import Pages.BasePage;
 import io.appium.java_client.android.AndroidDriver;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
 import java.text.MessageFormat;
@@ -20,6 +21,7 @@ public class ClockPage extends BasePage {
         super(driver, clockLocator);
     }
 
+    @Step
     public void getTimeElement(){
         var time = LocalTime.now().format(DateTimeFormatter.ofPattern("h:mm"));
 
@@ -28,6 +30,7 @@ public class ClockPage extends BasePage {
         findElementAssertDisplayed(timeLocator(time), "Clock time");
     }
 
+    @Step
     public void clickAddAlarm() {
         findElementAssertDisplayed(alarmLocator, "Alarm").click();
     }

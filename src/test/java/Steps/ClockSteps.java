@@ -6,6 +6,8 @@ import Pages.Clock.AlarmPage;
 import Pages.Clock.ClockPage;
 import Pages.Clock.TimerPage;
 import io.appium.java_client.android.AndroidDriver;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.By;
 
@@ -25,10 +27,12 @@ public class ClockSteps extends BaseSteps{
         super(driver);
     }
 
+    @Step
     public void openClockPageAndFindTime(){
         getClockPage().getTimeElement();
     }
 
+    @Step
     public void openAlarmPageAndSetTime(String time){
         LoggerUtil.logInfo("Find add alarm button and click");
         getClockPage().clickAddAlarm();
@@ -45,6 +49,7 @@ public class ClockSteps extends BaseSteps{
         getAlarmPage().pressOkOnTheAlarmAddView();
     }
 
+    @Step
     public void assertThatAlarmIsSet(String time){
         LoggerUtil.logInfo("Verify that it is toggled ON");
         getAlarmPage().getTheAlarmByTime(time);
@@ -53,6 +58,7 @@ public class ClockSteps extends BaseSteps{
         assertEquals("ON", toggle.getText());
     }
 
+    @Step
     public void SwipeToTheTimerPage(){
         LoggerUtil.logInfo("Swipe to the right, to the Timer");
         var screenElement = driver.findElement(By.xpath(

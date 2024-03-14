@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class TermsAndConditionsPage extends BasePage {
-    private By termsAndServicesVersionInfoLocator = By.xpath("//android.widget.LinearLayout[1]/android.widget.RelativeLayout");
+    private final By termsAndServicesVersionInfoLocator = By.xpath("//android.widget.LinearLayout[1]/android.widget.RelativeLayout");
     public TermsAndConditionsPage(AndroidDriver driver) {
         super(driver, By.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/list_container\"]"));
     }

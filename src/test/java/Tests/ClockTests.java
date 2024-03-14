@@ -2,6 +2,7 @@ package Tests;
 
 import Logger.LoggerUtil;
 import Steps.ClockSteps;
+import io.qameta.allure.Feature;
 import jdk.jfr.Description;
 import org.testng.annotations.Test;
 
@@ -10,6 +11,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+@Feature(value = "Clock")
 public class ClockTests extends BaseTest {
     private final ClockSteps clockSteps;
 

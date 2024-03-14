@@ -2,10 +2,12 @@ package Tests;
 
 import Logger.LoggerUtil;
 import Steps.MessagesSteps;
+import io.qameta.allure.Feature;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 
+@Feature(value = "Messages")
 public class MessagesTests extends BaseTest {
     private final MessagesSteps messagesSteps;
 

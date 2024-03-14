@@ -23,12 +23,30 @@ dependencies {
 test {
     useTestNG() {
         suites 'src/test/resources/testng.xml'
-        includeGroups 'Messages'
-        includeGroups 'Mastodon'
-        includeGroups 'Clock'
     }
 }
 
 allure {
     version = '2.25.0'
 }
+
+
+def configureTestNGGroups(String... includedGroups) {
+    test {
+        useTestNG() {
+            if (includedGroups) {
+                includeGroups includedGroups
+            }
+        }
+    }
+}
+
+
+def runSpecificTests(String... testNames) {
+    test {
+        systemProperty 'specificTests', testNames.join(',')
+    }
+}
+
+//configureTestNGGroups('Clock', 'Mastodon')
+runSpecificTests('clockTest',  'openAppAndOpenLearnMoreThenClose')

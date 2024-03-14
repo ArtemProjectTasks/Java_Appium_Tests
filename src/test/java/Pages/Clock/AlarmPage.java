@@ -3,6 +3,7 @@ package Pages.Clock;
 import Logger.LoggerUtil;
 import Pages.BasePage;
 import io.appium.java_client.android.AndroidDriver;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -28,29 +29,35 @@ public class AlarmPage extends BasePage {
         super(driver, By.xpath("//android.support.v7.widget.RecyclerView[@resource-id=\"com.google.android.deskclock:id/alarm_recycler_view\"]"));
     }
 
+    @Step
     public void setTimeOnTheAlarm(String time){
         findElementAssertDisplayed(alarmHourButton(time),
                 MessageFormat.format("{0} hours button", time))
                 .click();
     }
 
+    @Step
     public void setAlarmMinutesTo30(){
         findElementAssertDisplayed(alarmMinutes, "30 minutes button").click();
     }
 
+    @Step
     public void pressOkOnTheAlarmAddView() {
         findElementAssertDisplayed(alarmOKButton, "Ok button").click();
     }
 
+    @Step
     public WebElement getTheAlarmByTime(String time){
         LoggerUtil.logInfo("Find newly created alarm with time");
         return findElementAssertDisplayed(alarm(time), "Alarm", 20);
     }
 
+    @Step
     public void clickAddAlarm(){
         findElementAssertDisplayed(addAlarmButtonLocator, "Add alarm", 20).click();
     }
 
+    @Step
     public WebElement getToggle(String time){
         return findElementAssertDisplayed(By.xpath(
                         MessageFormat.format(

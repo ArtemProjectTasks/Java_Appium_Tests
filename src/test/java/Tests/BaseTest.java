@@ -2,7 +2,13 @@ package Tests;
 
 import Logger.LoggerUtil;
 import io.appium.java_client.android.AndroidDriver;
+import io.qameta.allure.Attachment;
+import io.qameta.allure.Step;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
@@ -44,21 +50,38 @@ public class BaseTest {
         ConfigureDriver(hashSet);
     }
 
-    @AfterTest
-    public void beforeTearDown(){
-        driver.quit();
+    @AfterMethod
+    @Step("After method tear down")
+    public void beforeTearDown(ITestResult result){
+        Map<String, Object> caps = driver.getCapabilities().asMap();
+
+        if (ITestResult.FAILURE == result.getStatus()) {
+            captureScreenshot(driver);
+        }
+
+        if (driver != null) {
+            driver.terminateApp(caps.get("appium:appPackage").toString());
+            driver.quit();
+        }
     }
 
+    @Attachment(value = "Failure screenshot", type = "image/png")
+    private static byte[] captureScreenshot(AndroidDriver driver) {
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    }
+
+    @Step("Configure driver")
     private void ConfigureDriver(Map<String, String> set) throws MalformedURLException {
         LoggerUtil.logInfo("Add all capabilities");
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        getDefaultCapabilities().forEach((k, v) -> desiredCapabilities.setCapability(k, v));
-        set.forEach((k, v) -> desiredCapabilities.setCapability(k, v));
+        getDefaultCapabilities().forEach(desiredCapabilities::setCapability);
+        set.forEach(desiredCapabilities::setCapability);
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), desiredCapabilities);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
+    @Step
     private static Map<String, String> getDefaultCapabilities() throws KeyAlreadyExistsException {
         LoggerUtil.logInfo("Configure default capabilities for tests");
         Map<String, String> dictOfCapabilities = new HashMap<>();

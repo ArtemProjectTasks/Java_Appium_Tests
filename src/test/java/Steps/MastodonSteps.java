@@ -4,6 +4,7 @@ import Enums.SwipeSideEnum;
 import Logger.LoggerUtil;
 import Pages.Mastodon.MastodonInitialPage;
 import io.appium.java_client.android.AndroidDriver;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -23,11 +24,13 @@ public class MastodonSteps extends BaseSteps{
         super(driver);
     }
 
+    @Step
     public void ClickLearnMore(){
         LoggerUtil.logInfo("Open mastodon and open learn more");
         getMastodonInitialPage().GetLearnMoreButton().click();
     }
 
+    @Step
     public void FindLearnMoreViewAndClose(){
         LoggerUtil.logInfo("Find opened learn more panel and assert it displayed");
         var panel = getMastodonInitialPage().GetLearnMorePanel();
