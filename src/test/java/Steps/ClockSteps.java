@@ -6,7 +6,6 @@ import Pages.Clock.AlarmPage;
 import Pages.Clock.ClockPage;
 import Pages.Clock.TimerPage;
 import io.appium.java_client.android.AndroidDriver;
-import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.By;
