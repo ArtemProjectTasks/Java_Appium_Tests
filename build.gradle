@@ -15,13 +15,28 @@ dependencies {
     implementation 'io.appium:java-client:9.1.0'
     testImplementation 'ch.qos.logback:logback-classic:1.5.1'
     implementation 'org.slf4j:slf4j-api:2.0.12'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     implementation 'io.qameta.allure:allure-testng:2.25.0'
-}
-
-test {
-    useTestNG()
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+    runtimeOnly 'org.aspectj:aspectjweaver:1.9.21.1'
+    runtimeOnly 'org.aspectj:aspectjrt:1.9.21.1'
 }
 
 allure {
     version = '2.25.0'
 }
+
+def printSomeTextBeforeExecution(String text){
+    print(text);
+}
+
+def printSystemInfo(){
+    println "Operating System: ${System.getProperty('os.name')} (${System.getProperty('os.version')})"
+    print("Java Version: ${System.getProperty('java.version')}")
+}
+
+printSomeTextBeforeExecution("Text that execute printing characters in a sequence")
+printSystemInfo()
